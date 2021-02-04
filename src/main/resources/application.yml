@@ -1,0 +1,26 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: feature-access-manager
+  main:
+    banner-mode: off
+  datasource:
+    url: jdbc:h2:mem:feature-manager
+    username: admin
+    password: admin
+    type: com.zaxxer.hikari.HikariDataSource
+    hikari:
+      minimum-idle: 2
+      maximum-pool-size: 10
+  jpa:
+    database-platform: H2
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    open-in-view: true
+
+logging:
+  level:
+    feature.access: info
