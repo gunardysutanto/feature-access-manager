@@ -20,7 +20,7 @@ import java.util.Map;
 import static java.util.stream.Collectors.*;
 
 @RestController
-@RequestMapping("/feature")
+@RequestMapping("/features")
 public class FeatureAccessResource {
     @Autowired
     private FeatureAccessRepository featureAccessRepository;

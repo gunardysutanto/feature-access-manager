@@ -15,19 +15,23 @@ Please run the command to build the container image
 ### Start to use the feature
 You can the tools such as: TestMace or Postman for these operations below.
 - Determine the status of user access for any feature.
-  ```shell
-    url: http://{your local ip address}:8080/feature?featureName={Put your feature name here}&email={Put the user e-mail here}
-    Method: GET
+  ```
+  url: http://{your local ip address}:8080/features?featureName={Put your feature name here}&email={Put the user e-mail here}
+  ```
+  **Method**: GET
+  
 
 - To enable/disable the user access for any feature.
-    ```
-    url: 'http://{your local ip address}:8080/feature'
-    method: POST
-    Request Body:
-    {
-       "featureName": "{Put the feature name here}",
-       "email": "{Put the user e-mail here}",
-       "enable": "{Put the status for user access(true or false) here}"
-    }
-    ```
+  ``` 
+  url: 'http://{your local ip address}:8080/features'
+  ```
+  **Method**: POST
   
+  **Request Body**
+  ```json
+  {
+     "featureName": "{Put the feature name here}",
+     "email": "{Put the user e-mail here}",
+     "enable": "{Put the status for user access(true or false) here}"
+  }  
+  ```  

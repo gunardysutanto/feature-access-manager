@@ -41,26 +41,26 @@ public class EnableOrDisableAccessTesting {
     @Test
     public void enablingTheNewFeature() throws Exception {
         FeatureAccess newFeatureAccess = prepareNewTestData("Customer Portfolio","john.doe@dev.net",Boolean.TRUE);
-        mockMvc.perform(post("/feature").contentType(MediaType.APPLICATION_JSON).content(convertIntoStringForm(newFeatureAccess))).andExpect(status().isOk());
+        mockMvc.perform(post("/features").contentType(MediaType.APPLICATION_JSON).content(convertIntoStringForm(newFeatureAccess))).andExpect(status().isOk());
     }
 
     @Test
     public void disablingTheExistingFeatureAccess() throws Exception {
         FeatureAccess testFeatureAccess = featureAccessRepository.findFeatureAccessByFeatureNameAndEmail("Billing Payment","john.doe@dev.net").orElseThrow(()-> new NoSuchFeatureAccessException("Billing Payment","john.doe@dev.net"));
         testFeatureAccess.setEnable(Boolean.FALSE.toString());
-        mockMvc.perform(post("/feature").contentType(MediaType.APPLICATION_JSON).content(convertIntoStringForm(testFeatureAccess))).andExpect(status().isOk());
+        mockMvc.perform(post("/features").contentType(MediaType.APPLICATION_JSON).content(convertIntoStringForm(testFeatureAccess))).andExpect(status().isOk());
     }
 
     @Test
     public void withoutChangingTheStatus() throws Exception {
         FeatureAccess testFeatureAccess = featureAccessRepository.findFeatureAccessByFeatureNameAndEmail("Billing Payment","john.doe@dev.net").orElseThrow(()-> new NoSuchFeatureAccessException("Billing Payment","john.doe@dev.net"));
-        mockMvc.perform(post("/feature").contentType(MediaType.APPLICATION_JSON).content(convertIntoStringForm(testFeatureAccess))).andExpect(status().isNotModified());
+        mockMvc.perform(post("/features").contentType(MediaType.APPLICATION_JSON).content(convertIntoStringForm(testFeatureAccess))).andExpect(status().isNotModified());
     }
 
     @Test
     public void withoutAnyUserInput() throws Exception {
         FeatureAccess featureAccess = new FeatureAccess();
-        mockMvc.perform(post("/feature").contentType(MediaType.APPLICATION_JSON).content(convertIntoStringForm(featureAccess))).andExpect(status().isBadRequest())
+        mockMvc.perform(post("/features").contentType(MediaType.APPLICATION_JSON).content(convertIntoStringForm(featureAccess))).andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errorMessage",is(errorMessageHeaderForInvalidFormEntry())))
                 .andExpect(jsonPath("$.userInputViolations.featureName",hasItem("Please fill-up the feature name since it is required.")))
                 .andExpect(jsonPath("$.userInputViolations.email",hasItem("Please fill-up the user e-mail address since it is required.")))
@@ -71,7 +71,7 @@ public class EnableOrDisableAccessTesting {
     public void withIncorrectEmailFormat() throws Exception {
         FeatureAccess featureAccess = featureAccessRepository.findFeatureAccessByFeatureNameAndEmail("Billing Payment","john.doe@dev.net").orElseThrow(()-> new NoSuchFeatureAccessException("Billing Payment","john.doe@dev.net"));
         featureAccess.setEmail("john.doe");
-        mockMvc.perform(post("/feature").contentType(MediaType.APPLICATION_JSON).content(convertIntoStringForm(featureAccess))).andExpect(status().isBadRequest())
+        mockMvc.perform(post("/features").contentType(MediaType.APPLICATION_JSON).content(convertIntoStringForm(featureAccess))).andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errorMessage",is(errorMessageHeaderForInvalidFormEntry())))
                 .andExpect(jsonPath("$.userInputViolations.email",hasItem("Please fill-up the user e-mail address by using the proper e-mail format.")));
     }
@@ -80,7 +80,7 @@ public class EnableOrDisableAccessTesting {
     public void withTheIncorrectAccessStatus() throws Exception {
         FeatureAccess featureAccess = featureAccessRepository.findFeatureAccessByFeatureNameAndEmail("Billing Payment","john.doe@dev.net").orElseThrow(()-> new NoSuchFeatureAccessException("Billing Payment","john.doe@dev.net"));
         featureAccess.setEnable("Yes");
-        mockMvc.perform(post("/feature").contentType(MediaType.APPLICATION_JSON).content(convertIntoStringForm(featureAccess))).andExpect(status().isBadRequest())
+        mockMvc.perform(post("/features").contentType(MediaType.APPLICATION_JSON).content(convertIntoStringForm(featureAccess))).andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errorMessage",is(errorMessageHeaderForInvalidFormEntry())))
                 .andExpect(jsonPath("$.userInputViolations.enable",hasItem("Please fill-up the status for feature accessibility with one of these options: true or false.")));
     }
@@ -89,7 +89,7 @@ public class EnableOrDisableAccessTesting {
     public void withEmptyAccessStatus() throws Exception {
         FeatureAccess featureAccess = featureAccessRepository.findFeatureAccessByFeatureNameAndEmail("Billing Payment","john.doe@dev.net").orElseThrow(()-> new NoSuchFeatureAccessException("Billing Payment","john.doe@dev.net"));
         featureAccess.setEnable("");
-        mockMvc.perform(post("/feature").contentType(MediaType.APPLICATION_JSON).content(convertIntoStringForm(featureAccess))).andExpect(status().isBadRequest())
+        mockMvc.perform(post("/features").contentType(MediaType.APPLICATION_JSON).content(convertIntoStringForm(featureAccess))).andExpect(status().isBadRequest())
                 .andExpect(jsonPath("$.errorMessage",is(errorMessageHeaderForInvalidFormEntry())))
                 .andExpect(jsonPath("$.userInputViolations.enable",hasItem("Please fill-up the status for user access since it is required.")))
                 .andExpect(jsonPath("$.userInputViolations.enable",hasItem("Please fill-up the status for feature accessibility with one of these options: true or false.")));

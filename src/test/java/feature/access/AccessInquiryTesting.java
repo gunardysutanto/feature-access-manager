@@ -41,13 +41,13 @@ public class AccessInquiryTesting {
 
     @Test
     public void inquiryWithoutUserInput() throws Exception {
-        mockMvc.perform(get("/feature").accept(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest()).andExpect(jsonPath("$.errorMessage",is("Please provide both the name of the feature and the user e-mail address to perform this operation.")));
+        mockMvc.perform(get("/features").accept(MediaType.APPLICATION_JSON)).andExpect(status().isBadRequest()).andExpect(jsonPath("$.errorMessage",is("Please provide both the name of the feature and the user e-mail address to perform this operation.")));
     }
 
     @Test
     public void inquiryWithCorrectUserInput() throws Exception {
         FeatureAccess featureAccess = featureAccessRepository.findFeatureAccessByFeatureNameAndEmail("Billing Payments","john.doe@dev.net").orElseThrow(()-> new NoSuchFeatureAccessException("Billing Payments","john.doe@dev.net"));
-        mockMvc.perform(get("/feature").accept(MediaType.APPLICATION_JSON).queryParams(queryParamsFrom(featureAccess))).andExpect(status().isOk()).andExpect(jsonPath("$.canAccess",is(Boolean.valueOf(featureAccess.getEnable()))));
+        mockMvc.perform(get("/features").accept(MediaType.APPLICATION_JSON).queryParams(queryParamsFrom(featureAccess))).andExpect(status().isOk()).andExpect(jsonPath("$.canAccess",is(Boolean.valueOf(featureAccess.getEnable()))));
     }
 
     @Test
@@ -56,7 +56,7 @@ public class AccessInquiryTesting {
         paramsForUserInput.add("featureName","Interbank Transfer");
         paramsForUserInput.add("email","john.doe@dev.com");
 
-        mockMvc.perform(get("/feature").accept(MediaType.APPLICATION_JSON).queryParams(paramsForUserInput)).andExpect(status().isBadRequest()).andExpect(jsonPath("$.errorMessage",is(String.format("There is no feature access for the given references as it does not exist [feature = %s, e-mail = %s].",paramsForUserInput.get("featureName").get(0),paramsForUserInput.get("email").get(0)))));
+        mockMvc.perform(get("/features").accept(MediaType.APPLICATION_JSON).queryParams(paramsForUserInput)).andExpect(status().isBadRequest()).andExpect(jsonPath("$.errorMessage",is(String.format("There is no feature access for the given references as it does not exist [feature = %s, e-mail = %s].",paramsForUserInput.get("featureName").get(0),paramsForUserInput.get("email").get(0)))));
 
     }
 
@@ -66,7 +66,7 @@ public class AccessInquiryTesting {
         featureAccess.setEnable(Boolean.FALSE.toString());
         featureAccessRepository.save(featureAccess);
 
-        mockMvc.perform(get("/feature").accept(MediaType.APPLICATION_JSON).queryParams(queryParamsFrom(featureAccess))).andExpect(status().isOk()).andExpect(jsonPath("$.canAccess",is(Boolean.valueOf(featureAccess.getEnable()))));
+        mockMvc.perform(get("/features").accept(MediaType.APPLICATION_JSON).queryParams(queryParamsFrom(featureAccess))).andExpect(status().isOk()).andExpect(jsonPath("$.canAccess",is(Boolean.valueOf(featureAccess.getEnable()))));
     }
 
     @AfterAll
